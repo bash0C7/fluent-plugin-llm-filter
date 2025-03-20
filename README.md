@@ -66,9 +66,10 @@ $ bundle
   output_field llm_output
   
   # Custom LLM options as JSON (optional)
-  options_json {"temperature": 0.3, "top_p": 0.95, "top_k": 40}
+  {"temperature":0.6,"top_p":0.88,"top_k":40,"num_predict":512,"repeat_penalty":1.2,"presence_penalty":0.2,"frequency_penalty":0.2,"stop":["\n\n","。\n"],"seed":0}
   
-
+  # Timeout in seconds for LLM processing (optional)
+  timeout 300
 </filter>
 ```
 
@@ -81,7 +82,8 @@ $ bundle
 | prompt | string | The prompt/instruction for the LLM | (required) |
 | input_field | string | The field in the record to extract context from | message |
 | output_field | string | The field in the record to store the LLM result | llm_output |
-| options_json | string | JSON string with custom LLM options | {} |
+| options_json | string | JSON string with custom LLM options | {"temperature":0.6,"top_p":0.88,"top_k":40,"num_predict":512,"repeat_penalty":1.2,"presence_penalty":0.2,"frequency_penalty":0.2,"stop":["\n\n","。\n"],"seed":0} |
+| timeout | integer | Timeout in seconds for LLM processing | 300 |
 
 ## LLM Options
 

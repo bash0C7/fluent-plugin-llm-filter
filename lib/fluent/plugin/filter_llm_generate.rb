@@ -25,7 +25,7 @@ module Fluent
       config_param :output_field, :string, default: 'llm_output'
       
       desc 'Custom LLM options in JSON format'
-      config_param :options_json, :string, default: '{"temperature":0.6,"top_p":0.88,"top_k":40,"num_predict":512,"repeat_penalty":1.2,"presence_penalty":0.2,"frequency_penalty":0.2,"stop":["\n\n","。\n"],"seed":0}'
+      config_param :options_json, :string, default: '{"temperature":0.6,"top_p":0.88,"top_k":40,"num_predict":2028,"repeat_penalty":1.2,"presence_penalty":0.2,"frequency_penalty":0.2,"stop":["\n\n","。\n"],"seed":-1}'
       
       desc 'Timeout in seconds for LLM processing'
       config_param :timeout, :integer, default: 300
@@ -48,7 +48,7 @@ module Fluent
         end
         
         # Get the content to process
-        content = record[@input_field].to_s
+        content = record[@input_field].force_encoding('UTF-8')
         
         # Process with LLM within timeout
         begin

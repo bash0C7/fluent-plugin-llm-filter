@@ -1,6 +1,6 @@
-# test/plugin/test_filter_llm_generate.rb
+# test/plugin/test_filter_llm_generate.rb (ファイル名変更)
 require "helper"
-require_relative "../../lib/fluent/plugin/filter_llm_generate.rb"
+require_relative "../../lib/fluent/plugin/filter_llm_generate.rb" # パス変更
 require "json"
 require "timeout"
 
@@ -40,7 +40,7 @@ module LLMAlfr
   end
 end
 
-class FilterLlmGenerateTest < Test::Unit::TestCase
+class LlmGenerateFilterTest < Test::Unit::TestCase # クラス名変更
   setup do
     Fluent::Test.setup
     @default_timeout = 1  # Short timeout for testing
@@ -68,7 +68,7 @@ class FilterLlmGenerateTest < Test::Unit::TestCase
       ]
       
       # Act
-      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(custom_config)
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(custom_config) # クラス名変更
       
       # Assert
       assert_equal 'llama3', d.instance.model_name
@@ -80,8 +80,100 @@ class FilterLlmGenerateTest < Test::Unit::TestCase
       assert_equal 60, d.instance.timeout
     end
 
-    # 他のテストケース...
+    test "invalid JSON in options" do
+      # Arrange
+      invalid_config = %[
+        prompt Tell me the main topic of this text.
+        options_json {invalid-json}
+      ]
+      
+      # Act & Assert
+      assert_raise do
+        Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(invalid_config) # クラス名変更
+      end
+    end
+    
+    test "invalid model name" do
+      # Arrange
+      invalid_config = %[
+        model_name invalid_model
+        prompt Tell me the main topic of this text.
+      ]
+      
+      # Act & Assert
+      assert_raise do
+        Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(invalid_config) # クラス名変更
+      end
+    end
   end
   
-  # 他のテストケース...
+  sub_test_case "filtering operation" do
+    test "normal operation" do
+      # Arrange
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(DEFAULT_CONFIG) # クラス名変更
+      
+      # Act
+      d.run(default_tag: DEFAULT_TAG) do
+        d.feed({"message" => "AI and machine learning are transforming industries."})
+      end
+      
+      # Assert
+      filtered_record = d.filtered_records.first
+      assert_equal "LLM response: Processed 52 characters", filtered_record["llm_output"]
+      
+      # Verify the processor was called with correct parameters
+      processor = d.instance.instance_variable_get(:@processor)
+      assert_equal 1, processor.process_calls.size
+      assert_equal "Tell me the main topic of this text.", processor.process_calls[0][:prompt]
+      assert_equal "AI and machine learning are transforming industries.", processor.process_calls[0][:context]
+    end
+    
+    test "missing input field" do
+      # Arrange
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(DEFAULT_CONFIG) # クラス名変更
+      
+      # Act
+      d.run(default_tag: DEFAULT_TAG) do
+        d.feed({"other_field" => "Some content"})
+      end
+      
+      # Assert
+      filtered_record = d.filtered_records.first
+      assert_false filtered_record.key?("llm_output")
+    end
+    
+    test "error handling" do
+      # Arrange
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(DEFAULT_CONFIG) # クラス名変更
+      
+      # Act
+      d.run(default_tag: DEFAULT_TAG) do
+        d.feed({"message" => "This will cause an error in processing"})
+      end
+      
+      # Assert
+      filtered_record = d.filtered_records.first
+      assert_true filtered_record["llm_output"].start_with?("Error:")
+    end
+    
+    test "custom options are passed to processor" do
+      # Arrange
+      custom_config = %[
+        prompt Summarize this text
+        options_json {"temperature": 0.3, "top_p": 0.95}
+        timeout #{@default_timeout}
+      ]
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(custom_config) # クラス名変更
+      
+      # Act
+      d.run(default_tag: DEFAULT_TAG) do
+        d.feed({"message" => "Test message"})
+      end
+      
+      # Assert
+      processor = d.instance.instance_variable_get(:@processor)
+      assert_equal 1, processor.process_calls.size
+      assert_equal({"temperature" => 0.3, "top_p" => 0.95}, processor.process_calls[0][:options])
+    end
+  end
 end
