@@ -25,10 +25,10 @@ module Fluent
       config_param :output_field, :string, default: 'llm_output'
       
       desc 'Custom LLM options in JSON format'
-      config_param :options_json, :string, default: '{}'
+      config_param :options_json, :string, default: '{"temperature":0.6,"top_p":0.88,"top_k":40,"num_predict":512,"repeat_penalty":1.2,"presence_penalty":0.2,"frequency_penalty":0.2,"stop":["\n\n","。\n"],"seed":0}'
       
       desc 'Timeout in seconds for LLM processing'
-      config_param :timeout, :integer, default: 1
+      config_param :timeout, :integer, default: 300
       
       def configure(conf)
         super
