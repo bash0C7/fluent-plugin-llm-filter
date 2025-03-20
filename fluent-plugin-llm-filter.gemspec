@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 Gem::Specification.new do |spec|
   spec.name    = "fluent-plugin-llm-filter"
   spec.version = "0.1.0"
-  spec.authors = ["bash0C7"]
+  spec.authors = ["Toshiaki \"bash\" KOSHIBA"]
   spec.email   = ["ksb.4038.nullpointer+github@gmail.com"]
 
-  spec.summary       = %q{Fluentd filter plugin for transcoding audio files}
-  spec.description   = %q{A Fluentd filter plugin that transcodes audio files using FFMPEG for optimal speech-to-text processing}
-  spec.homepage      = "https://github.com/bash0C7/fluent-plugin-audio-transcoder"
-  spec.license       = "Apache-2.0"
+  spec.summary       = %q{Fluentd filter plugin for processing text with Large Language Models using Ollama}
+  spec.description   = %q{A Fluentd filter plugin that processes text with Large Language Models (LLMs) using Ollama for tasks like summarization, translation, and more}
+  spec.homepage      = "https://github.com/bash0C7/fluent-plugin-llm-filter"
+  spec.license       = "MIT"
 
   spec.files         = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|
@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 13.2.1"
   spec.add_development_dependency "test-unit", "~> 3.6.7"
   spec.add_runtime_dependency "fluentd", [">= 0.14.10", "< 2"]
+  spec.add_runtime_dependency "llmalfr", "~> 0.1.0"
 end
