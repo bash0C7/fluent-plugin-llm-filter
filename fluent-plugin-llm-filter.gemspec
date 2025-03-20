@@ -1,17 +1,19 @@
+# fluent-plugin-llm-generate.gemspec (ファイル名も変更)
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name    = "fluent-plugin-llm-filter"
+  spec.name    = "fluent-plugin-llm-generate" # 名前変更
   spec.version = "0.1.0"
   spec.authors = ["Toshiaki \"bash\" KOSHIBA"]
   spec.email   = ["ksb.4038.nullpointer+github@gmail.com"]
 
-  spec.summary       = %q{Fluentd filter plugin for processing text with Large Language Models using Ollama}
-  spec.description   = %q{A Fluentd filter plugin that processes text with Large Language Models (LLMs) using Ollama for tasks like summarization, translation, and more}
-  spec.homepage      = "https://github.com/bash0C7/fluent-plugin-llm-filter"
+  spec.summary       = %q{Fluentd filter plugin for generating text with Large Language Models using Ollama}
+  spec.description   = %q{A Fluentd filter plugin that generates text with Large Language Models (LLMs) using Ollama for tasks like summarization, translation, and more}
+  spec.homepage      = "https://github.com/bash0C7/fluent-plugin-llm-generate" # URL変更
   spec.license       = "Apache License"
 
+  # 以下は同じ
   spec.files         = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|
       (File.expand_path(f) == __FILE__) ||

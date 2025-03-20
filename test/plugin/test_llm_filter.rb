@@ -1,5 +1,6 @@
+# test/plugin/test_filter_llm_generate.rb (ファイル名変更)
 require "helper"
-require_relative "../../lib/fluent/plugin/llm_filter.rb"
+require_relative "../../lib/fluent/plugin/filter_llm_generate.rb" # パス変更
 require "json"
 require "timeout"
 
@@ -39,7 +40,7 @@ module LLMAlfr
   end
 end
 
-class LlmFilterTest < Test::Unit::TestCase
+class LlmGenerateFilterTest < Test::Unit::TestCase # クラス名変更
   setup do
     Fluent::Test.setup
     @default_timeout = 1  # Short timeout for testing
@@ -67,7 +68,7 @@ class LlmFilterTest < Test::Unit::TestCase
       ]
       
       # Act
-      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmFilter).configure(custom_config)
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(custom_config) # クラス名変更
       
       # Assert
       assert_equal 'llama3', d.instance.model_name
@@ -88,7 +89,7 @@ class LlmFilterTest < Test::Unit::TestCase
       
       # Act & Assert
       assert_raise do
-        Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmFilter).configure(invalid_config)
+        Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(invalid_config) # クラス名変更
       end
     end
     
@@ -101,7 +102,7 @@ class LlmFilterTest < Test::Unit::TestCase
       
       # Act & Assert
       assert_raise do
-        Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmFilter).configure(invalid_config)
+        Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(invalid_config) # クラス名変更
       end
     end
   end
@@ -109,7 +110,7 @@ class LlmFilterTest < Test::Unit::TestCase
   sub_test_case "filtering operation" do
     test "normal operation" do
       # Arrange
-      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmFilter).configure(DEFAULT_CONFIG)
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(DEFAULT_CONFIG) # クラス名変更
       
       # Act
       d.run(default_tag: DEFAULT_TAG) do
@@ -129,7 +130,7 @@ class LlmFilterTest < Test::Unit::TestCase
     
     test "missing input field" do
       # Arrange
-      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmFilter).configure(DEFAULT_CONFIG)
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(DEFAULT_CONFIG) # クラス名変更
       
       # Act
       d.run(default_tag: DEFAULT_TAG) do
@@ -143,7 +144,7 @@ class LlmFilterTest < Test::Unit::TestCase
     
     test "error handling" do
       # Arrange
-      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmFilter).configure(DEFAULT_CONFIG)
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(DEFAULT_CONFIG) # クラス名変更
       
       # Act
       d.run(default_tag: DEFAULT_TAG) do
@@ -162,7 +163,7 @@ class LlmFilterTest < Test::Unit::TestCase
         options_json {"temperature": 0.3, "top_p": 0.95}
         timeout #{@default_timeout}
       ]
-      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmFilter).configure(custom_config)
+      d = Fluent::Test::Driver::Filter.new(Fluent::Plugin::LlmGenerateFilter).configure(custom_config) # クラス名変更
       
       # Act
       d.run(default_tag: DEFAULT_TAG) do

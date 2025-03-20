@@ -1,3 +1,4 @@
+# lib/fluent/plugin/filter_llm_generate.rb (新しいファイル名)
 require 'fluent/plugin/filter'
 require 'json'
 require 'timeout'
@@ -5,8 +6,8 @@ require 'llmalfr'
 
 module Fluent
   module Plugin
-    class LlmFilter < Filter
-      Fluent::Plugin.register_filter('llm_filter', self)
+    class LlmGenerateFilter < Filter # クラス名変更
+      Fluent::Plugin.register_filter('llm_generate', self) # プラグイン名変更
 
       desc 'Ollama model name to use'
       config_param :model_name, :string, default: 'hf.co/elyza/Llama-3-ELYZA-JP-8B-GGUF:latest'
