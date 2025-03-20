@@ -1,4 +1,4 @@
-# fluent-plugin-llm-filter
+# fluent-plugin-llm-generate
 
 [Fluentd](https://fluentd.org/) filter plugin to process text with Large Language Models (LLMs) using Ollama.
 
@@ -25,7 +25,7 @@ This plugin sends text from your Fluentd logs to a local Ollama instance for LLM
 ### RubyGems
 
 ```
-$ gem install fluent-plugin-llm-filter
+$ gem install fluent-plugin-llm-generate
 ```
 
 ### Bundler
@@ -33,7 +33,7 @@ $ gem install fluent-plugin-llm-filter
 Add the following line to your Gemfile:
 
 ```ruby
-gem 'fluent-plugin-llm-filter'
+gem 'fluent-plugin-llm-generate'
 ```
 
 And then execute:
@@ -48,7 +48,7 @@ $ bundle
 
 ```
 <filter your.tag.here>
-  @type llm_filter
+  @type llm_generate
   
   # Ollama model name (optional)
   model_name hf.co/elyza/Llama-3-ELYZA-JP-8B-GGUF:latest
@@ -125,7 +125,7 @@ The plugin implements minimal error handling:
 
 ```
 <filter app.logs>
-  @type llm_filter
+  @type llm_generate
   model_name hf.co/elyza/Llama-3-ELYZA-JP-8B-GGUF:latest
   api_url http://localhost:11434/api
   prompt Summarize this log entry in one short sentence.
@@ -139,7 +139,7 @@ The plugin implements minimal error handling:
 
 ```
 <filter feedback.user>
-  @type llm_filter
+  @type llm_generate
   model_name hf.co/elyza/Llama-3-ELYZA-JP-8B-GGUF:latest
   api_url http://localhost:11434/api
   prompt Translate the following user feedback to English.
@@ -153,7 +153,7 @@ The plugin implements minimal error handling:
 
 ```
 <filter support.tickets>
-  @type llm_filter
+  @type llm_generate
   model_name hf.co/elyza/Llama-3-ELYZA-JP-8B-GGUF:latest
   api_url http://localhost:11434/api
   prompt Extract the following entities from this support ticket: product_name, issue_type, severity (high, medium, low), customer_sentiment (positive, neutral, negative).
@@ -175,8 +175,4 @@ After checking out the repo, run `bundle install` to install dependencies. Then,
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/bash0C7/fluent-plugin-llm-filter.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+Bug reports and pull requests are welcome on GitHub at https://github.com/bash0C7/fluent-plugin-llm-generate.
