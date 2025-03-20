@@ -1,5 +1,5 @@
 require "helper"
-require "fluent/plugin/filter_llm_filter.rb"
+require_relative "../../lib/fluent/plugin/fluent_plugin_llm_filter.rb"
 require "json"
 require "timeout"
 
