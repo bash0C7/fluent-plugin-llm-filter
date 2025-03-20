@@ -1,6 +1,6 @@
 # test/plugin/test_filter_llm_generate.rb (ファイル名変更)
 require "helper"
-require_relative "../../lib/fluent/plugin/filter_llm_generate.rb" # パス変更
+require_relative "../../lib/fluent/plugin/llm_generate.rb" # パス変更
 require "json"
 require "timeout"
 
