@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Fluentd filter plugin for processing text with Large Language Models using Ollama}
   spec.description   = %q{A Fluentd filter plugin that processes text with Large Language Models (LLMs) using Ollama for tasks like summarization, translation, and more}
   spec.homepage      = "https://github.com/bash0C7/fluent-plugin-llm-filter"
-  spec.license       = "MIT"
+  spec.license       = "Apache License"
 
   spec.files         = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|
