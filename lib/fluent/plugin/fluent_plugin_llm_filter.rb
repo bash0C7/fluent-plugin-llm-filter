@@ -1,69 +1,65 @@
 require 'fluent/plugin/filter'
-require 'fluent/config/error'
-require 'llmalfr'
 require 'json'
 require 'timeout'
+require 'llmalfr'
 
 module Fluent
   module Plugin
     class LlmFilter < Filter
       Fluent::Plugin.register_filter('llm_filter', self)
 
-      # Configuration parameters
       desc 'Ollama model name to use'
       config_param :model_name, :string, default: 'hf.co/elyza/Llama-3-ELYZA-JP-8B-GGUF:latest'
       
       desc 'Ollama API URL'
       config_param :api_url, :string, default: 'http://localhost:11434/api'
       
-      desc 'Prompt for the LLM'
+      desc 'Prompt to send to the LLM'
       config_param :prompt, :string
       
-      desc 'Input field to extract context from'
+      desc 'Input field name to extract content from'
       config_param :input_field, :string, default: 'message'
       
-      desc 'Output field to store LLM results'
+      desc 'Output field name to store the LLM result'
       config_param :output_field, :string, default: 'llm_output'
       
-      desc 'JSON string with custom LLM options'
+      desc 'Custom LLM options in JSON format'
       config_param :options_json, :string, default: '{}'
       
       desc 'Timeout in seconds for LLM processing'
-      config_param :timeout, :integer, default: 30
-
+      config_param :timeout, :integer, default: 1
+      
       def configure(conf)
         super
         
         # Parse options JSON
-        begin
-          @options = JSON.parse(@options_json)
-        rescue JSON::ParserError
-          raise Fluent::ConfigError, "Invalid JSON in options_json: #{@options_json}"
-        end
+        @options = JSON.parse(@options_json)
         
         # Initialize LLM processor
-        begin
-          @processor = LLMAlfr::Processor.new(@model_name, @api_url)
-        rescue => e
-          raise Fluent::ConfigError, "Failed to initialize LLM processor: #{e.message}"
-        end
+        @processor = LLMAlfr::Processor.new(@model_name, @api_url)
       end
-
+      
       def filter(tag, time, record)
-        # Skip processing if input field is missing
-        return record unless record.key?(@input_field)
+        # Check if input field exists in the record
+        unless record.key?(@input_field)
+          log.debug("Input field '#{@input_field}' not found in record")
+          return record
+        end
         
-        # Get context from input field
-        context = record[@input_field].to_s
+        # Get the content to process
+        content = record[@input_field].to_s
         
-        # Process text with LLM
+        # Process with LLM within timeout
         begin
-          Timeout.timeout(@timeout) do
-            record[@output_field] = @processor.process(@prompt, context, @options)
+          result = Timeout.timeout(@timeout) do
+            @processor.process(@prompt, content, @options)
           end
+          record[@output_field] = result
         rescue Timeout::Error
+          log.warn("LLM processing timed out for tag: #{tag}")
           record[@output_field] = "Error: LLM processing timed out"
         rescue => e
+          log.error("Error in LLM processing: #{e.class}: #{e.message}")
           record[@output_field] = "Error: #{e.message}"
         end
         
